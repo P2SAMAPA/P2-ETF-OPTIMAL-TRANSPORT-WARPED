@@ -25,9 +25,8 @@ MACRO_VARS = [
     "DGS1MO", "DGS3MO", "DGS6MO", "DGS1", "DGS2", "DGS5", "DGS7",
     "DGS10", "DGS20", "DGS30"
 ]
-PRIMARY_MACRO = "VIX"
 
 # OT parameters
-REG_EPS = 0.01              # entropic regularisation for Sinkhorn
-NUM_QUANTILES = 100         # number of quantiles for distribution representation
+REG_EPS = 0.01
+NUM_QUANTILES = 100
 TOP_N = 3
