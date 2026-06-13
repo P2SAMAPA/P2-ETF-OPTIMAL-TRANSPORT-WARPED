@@ -33,7 +33,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<h1 style="text-align: center;">📐 Optimal Transport for Regime‑Warped Time Series</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align: center;">Wasserstein warping | Macro‑dependent distribution shift</p>', unsafe_allow_html=True)
+st.markdown('<p style="text-align: center;">Wasserstein warping | Composite macro‑dependent distribution shift</p>', unsafe_allow_html=True)
 
 st.sidebar.markdown("## 🧮 Optimal Transport")
 if st.sidebar.button("🔄 Refresh Data", use_container_width=True, type="primary"):
@@ -43,6 +43,7 @@ if st.sidebar.button("🔄 Refresh Data", use_container_width=True, type="primar
 st.sidebar.markdown(f"**Run Date:** `{st.session_state.get('run_date', 'Not loaded')}`")
 st.sidebar.markdown(f"**Next Trading Day:** `{next_trading_day()}`")
 st.sidebar.markdown(f"**Reg. ε:** {config.REG_EPS} | **Quantiles:** {config.NUM_QUANTILES}")
+st.sidebar.markdown(f"**Macro variables:** {len(config.MACRO_VARS)} (all used)")
 
 OUTPUT_REPO = config.OUTPUT_REPO
 HF_TOKEN = config.HF_TOKEN
@@ -114,10 +115,11 @@ with tab1:
     with st.expander("📖 Interpretation", expanded=False):
         st.markdown("""
         - **Optimal transport** (Wasserstein distance) aligns probability distributions with minimal cost.
-        - We use macro (VIX) to warp the return distribution: higher macro → expected return shifts upward.
+        - We compute a **composite macro factor** from all macro variables (VIX, DXY, yields) using ridge regression weights.
+        - This composite factor warps the return distribution: higher composite factor → expected return shifts upward.
         - The score = expected return after warping − current mean return (slope of the transport map).
-        - Positive score → macro suggests upward shift in returns.
-        - Negative score → macro suggests downward shift.
+        - Positive score → the composite macro environment suggests an upward shift in returns.
+        - Negative score → the composite macro environment suggests a downward shift.
         """)
     for universe_name, uni_data in data["universes"].items():
         if not uni_data or not uni_data.get("all_windows"):
@@ -150,4 +152,4 @@ with tab2:
             st.warning("No data for selected window.")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Optimal Transport for Regime‑Warped Time Series | Macro‑dependent distribution shift")
+st.sidebar.caption("Optimal Transport for Regime‑Warped Time Series | Composite macro‑dependent distribution shift")
