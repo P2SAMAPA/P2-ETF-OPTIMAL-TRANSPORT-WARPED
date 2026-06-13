@@ -29,12 +29,11 @@ def run_for_window(returns, macro_df, window_days):
     macro_window = macro_df.loc[ret_window.index]
     if len(macro_window) < len(ret_window):
         return None
-    macro_value = macro_window[config.PRIMARY_MACRO].iloc[-1]
     raw_scores = {}
     for ticker in ret_window.columns:
         s = optimal_transport_slope(
             ret_window[ticker].values,
-            macro_value,
+            macro_window,
             reg_eps=config.REG_EPS,
             num_quantiles=config.NUM_QUANTILES
         )
@@ -61,6 +60,7 @@ def main():
     results = {
         "run_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "windows": config.WINDOWS,
+        "macro_vars": config.MACRO_VARS,
         "reg_eps": config.REG_EPS,
         "num_quantiles": config.NUM_QUANTILES,
         "universes": {}
